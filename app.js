@@ -111,6 +111,10 @@ const uploadedGallery = document.querySelector(".uploaded-gallery");
 const adminLogin = document.querySelector(".admin-login");
 const adminDashboard = document.querySelector(".admin-dashboard");
 const adminLoginStatus = document.querySelector(".admin-login-status");
+const weatherTemp = document.querySelector("[data-weather-temp]");
+const weatherSummary = document.querySelector("[data-weather-summary]");
+const weatherWind = document.querySelector("[data-weather-wind]");
+const weatherTime = document.querySelector("[data-weather-time]");
 
 const fields = {
   name: form.elements.name,
@@ -293,6 +297,63 @@ function renderUploadedGallery() {
       `
     )
     .join("");
+}
+
+function weatherDescription(code) {
+  const descriptions = {
+    0: "Clear desert skies.",
+    1: "Mostly clear.",
+    2: "Partly cloudy.",
+    3: "Cloudy.",
+    45: "Foggy.",
+    48: "Depositing fog.",
+    51: "Light drizzle.",
+    53: "Drizzle.",
+    55: "Heavy drizzle.",
+    61: "Light rain.",
+    63: "Rain.",
+    65: "Heavy rain.",
+    71: "Light snow.",
+    80: "Light showers.",
+    81: "Showers.",
+    82: "Heavy showers.",
+    95: "Thunderstorm risk.",
+  };
+  return descriptions[code] || "Current trail conditions available.";
+}
+
+function heatGuidance(temp) {
+  if (temp >= 95) return " High heat: shorten walks, avoid hot ground, and prioritize shade.";
+  if (temp >= 85) return " Warm trail: bring extra water and plan frequent shade breaks.";
+  if (temp >= 75) return " Comfortable but sunny: check paw surfaces before starting.";
+  return " Mild conditions: still carry water and watch each dog closely.";
+}
+
+async function loadWeather() {
+  if (!weatherTemp) return;
+
+  try {
+    const response = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=33.60034&longitude=-111.8119&current=temperature_2m,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FPhoenix"
+    );
+    if (!response.ok) throw new Error("Weather service unavailable");
+
+    const data = await response.json();
+    const current = data.current;
+    const temp = Math.round(current.temperature_2m);
+    weatherTemp.textContent = `${temp}°F`;
+    weatherSummary.textContent = `${weatherDescription(current.weather_code)}${heatGuidance(temp)}`;
+    weatherWind.textContent = `${Math.round(current.wind_speed_10m)} mph`;
+    weatherTime.textContent = new Date(current.time).toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch (error) {
+    weatherTemp.textContent = "--";
+    weatherSummary.textContent = "Live weather is unavailable. Check Scottsdale conditions before leaving for the trail.";
+    weatherWind.textContent = "--";
+    weatherTime.textContent = "--";
+  }
 }
 
 function validateRsvp() {
@@ -640,7 +701,7 @@ document.querySelector("[data-show-all-dogs]").addEventListener("click", () => {
 });
 
 async function init() {
-  await Promise.all([loadDogs(), loadGallery()]);
+  await Promise.all([loadDogs(), loadGallery(), loadWeather()]);
   renderHeroDogs();
   renderDogs(true);
   renderUploadedGallery();

@@ -284,6 +284,7 @@ h3 {
 .trail-journey,
 .team-section,
 .admin-section,
+.weather-section,
 .story-band {
   scroll-margin-top: 5.5rem;
   padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 5rem);
@@ -433,6 +434,114 @@ h3 {
 
 .trail-journey {
   background: var(--paper);
+}
+
+.weather-section {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  background:
+    linear-gradient(135deg, rgba(30, 64, 57, 0.96), rgba(49, 95, 82, 0.9)),
+    var(--cactus-dark);
+  color: var(--white);
+}
+
+.weather-copy p {
+  max-width: 58ch;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.weather-section .eyebrow {
+  color: var(--sun);
+}
+
+.weather-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.weather-card {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
+}
+
+.weather-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--sun);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.weather-card strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1;
+}
+
+.weather-card p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.weather-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+}
+
+.weather-card dl div {
+  border-radius: 8px;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.weather-card dt {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.weather-card dd {
+  margin: 0.15rem 0 0;
+  font-weight: 850;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.tips-grid article {
+  min-height: 190px;
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--white);
+  color: var(--ink);
+}
+
+.tips-grid span {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--coral);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tips-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
 }
 
 .trail-journey .section-heading {
@@ -1226,11 +1335,16 @@ fieldset input {
   .team-section,
   .sponsor-section,
   .admin-grid,
+  .weather-section,
   .rsvp-section {
     grid-template-columns: 1fr;
   }
 
   .journey-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tips-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1304,6 +1418,7 @@ fieldset input {
   .impact-stats,
   .admin-stats,
   .uploaded-gallery,
+  .tips-grid,
   .journey-grid,
   .gallery-grid {
     grid-template-columns: 1fr;
