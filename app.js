@@ -1,10 +1,22 @@
 import { isSupabaseConfigured, supabase } from "./src/supabase.js";
+import adoptionMeetUrl from "./assets/adoption-meet.png";
+import familyWalkUrl from "./assets/family-walk.png";
+import rescuePortraitUrl from "./assets/rescue-portrait.png";
 
 const storageKeys = {
   rsvps: "fdld:rsvps",
   sponsors: "fdld:sponsors",
   teams: "fdld:teams",
   gallery: "fdld:gallery",
+};
+
+const bundledDogImages = {
+  "assets/adoption-meet.png": adoptionMeetUrl,
+  "adoption-meet.png": adoptionMeetUrl,
+  "assets/family-walk.png": familyWalkUrl,
+  "family-walk.png": familyWalkUrl,
+  "assets/rescue-portrait.png": rescuePortraitUrl,
+  "rescue-portrait.png": rescuePortraitUrl,
 };
 
 const defaultDogs = [
@@ -156,7 +168,10 @@ function dogMeta(dog) {
 }
 
 function getDogImage(dog) {
-  return dog.image_url || dog.image || "assets/rescue-portrait.png";
+  const imageUrl = dog.image_url || dog.image || "assets/rescue-portrait.png";
+  if (bundledDogImages[imageUrl]) return bundledDogImages[imageUrl];
+  if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) return imageUrl;
+  return bundledDogImages[imageUrl.split("/").pop()] || rescuePortraitUrl;
 }
 
 function normalizeRsvp(row) {
