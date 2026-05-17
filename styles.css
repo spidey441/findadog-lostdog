@@ -95,6 +95,25 @@ a {
   text-decoration: none;
 }
 
+.menu-toggle {
+  display: none;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+.menu-toggle span {
+  display: block;
+  width: 1.25rem;
+  height: 2px;
+  margin: 0.22rem auto;
+  border-radius: 999px;
+  background: currentColor;
+}
+
 .hero {
   position: relative;
   min-height: 92svh;
@@ -221,6 +240,46 @@ h3 {
   font-size: 1.15rem;
 }
 
+.countdown-card {
+  width: min(520px, 100%);
+  margin-top: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(14px);
+}
+
+.countdown-card > span {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--sun);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  text-align: center;
+}
+
+.countdown-grid strong {
+  color: var(--white);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  line-height: 1;
+}
+
+.countdown-grid small {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -274,6 +333,23 @@ h3 {
   font-size: 1.55rem;
 }
 
+.event-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.event-card-actions a {
+  border-radius: 999px;
+  padding: 0.45rem 0.65rem;
+  background: rgba(255, 255, 255, 0.18);
+  color: var(--white);
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
 .snapshot,
 .adopt-section,
 .gallery-section,
@@ -285,6 +361,9 @@ h3 {
 .team-section,
 .admin-section,
 .weather-section,
+.faq-section,
+.testimonial-section,
+.volunteer-section,
 .story-band {
   scroll-margin-top: 5.5rem;
   padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 5rem);
@@ -353,6 +432,7 @@ h3 {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--coral), var(--sun));
+  transition: width 500ms ease;
 }
 
 .impact-stats {
@@ -684,6 +764,42 @@ h3 {
   font-weight: 750;
 }
 
+.parking-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.parking-card article {
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--paper);
+  box-shadow: 0 12px 36px rgba(31, 38, 35, 0.08);
+}
+
+.parking-card span,
+.volunteer-grid span {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--coral);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.parking-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cactus-dark);
+}
+
+.parking-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .legend-dot {
   display: inline-block;
   width: 0.78rem;
@@ -796,6 +912,81 @@ h3 {
 
 .dog-card a {
   color: var(--cactus-dark);
+  font-weight: 850;
+}
+
+.dog-card.is-requested {
+  outline: 4px solid var(--sun);
+  outline-offset: -4px;
+}
+
+.dog-breed {
+  margin-bottom: 0.6rem;
+  color: var(--cactus-dark);
+  font-weight: 850;
+}
+
+.dog-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+  padding: 0;
+}
+
+.dog-tags span {
+  border-radius: 999px;
+  padding: 0.32rem 0.5rem;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.dog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.link-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--cactus-dark);
+  font: inherit;
+  font-weight: 850;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.testimonial-section {
+  background: var(--paper);
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.testimonial-grid blockquote {
+  margin: 0;
+  border-radius: 8px;
+  padding: 1.2rem;
+  background: var(--white);
+  box-shadow: 0 12px 36px rgba(31, 38, 35, 0.08);
+}
+
+.testimonial-grid p {
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.testimonial-grid cite {
+  color: var(--muted);
+  font-style: normal;
   font-weight: 850;
 }
 
@@ -936,6 +1127,35 @@ h3 {
   gap: clamp(2rem, 6vw, 5rem);
   align-items: start;
   background: var(--white);
+}
+
+.volunteer-section {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr) auto;
+  gap: clamp(1rem, 4vw, 2.5rem);
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(255, 250, 241, 0.95), rgba(246, 234, 215, 0.92)),
+    var(--paper-strong);
+}
+
+.volunteer-section p {
+  max-width: 58ch;
+  color: var(--muted);
+}
+
+.volunteer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.volunteer-grid article {
+  min-height: 190px;
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--white);
+  box-shadow: 0 12px 36px rgba(31, 38, 35, 0.08);
 }
 
 .team-copy p {
@@ -1201,6 +1421,33 @@ th {
   box-shadow: var(--shadow);
 }
 
+.faq-section {
+  background: var(--white);
+}
+
+.faq-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.faq-list details {
+  border: 1px solid #e0d2bd;
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--paper);
+}
+
+.faq-list summary {
+  color: var(--cactus-dark);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.faq-list p {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+
 .sponsor-form {
   display: grid;
   gap: 1rem;
@@ -1318,6 +1565,13 @@ fieldset input {
   color: var(--white);
 }
 
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
 .site-footer p {
   margin: 0.25rem 0 0;
   color: rgba(255, 255, 255, 0.68);
@@ -1333,6 +1587,7 @@ fieldset input {
   .impact-wall,
   .map-layout,
   .team-section,
+  .volunteer-section,
   .sponsor-section,
   .admin-grid,
   .weather-section,
@@ -1346,6 +1601,12 @@ fieldset input {
 
   .tips-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .parking-card,
+  .testimonial-grid,
+  .volunteer-grid {
+    grid-template-columns: 1fr;
   }
 
   .spot-list {
@@ -1371,18 +1632,33 @@ fieldset input {
 
 @media (max-width: 640px) {
   .site-header {
-    align-items: flex-start;
+    align-items: center;
+  }
+
+  .menu-toggle {
+    display: block;
   }
 
   .nav-links {
-    justify-content: flex-end;
-    gap: 0.3rem;
-    flex-wrap: wrap;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 1rem;
+    right: 1rem;
+    display: none;
+    align-items: stretch;
+    border-radius: 8px;
+    padding: 0.75rem;
+    background: rgba(23, 44, 39, 0.96);
+    box-shadow: var(--shadow);
+  }
+
+  .nav-links.is-open {
+    display: grid;
   }
 
   .nav-links a {
-    padding: 0.4rem 0.55rem;
-    font-size: 0.82rem;
+    padding: 0.85rem 0.9rem;
+    font-size: 0.95rem;
   }
 
   .brand span:last-child {
@@ -1418,6 +1694,9 @@ fieldset input {
   .impact-stats,
   .admin-stats,
   .uploaded-gallery,
+  .parking-card,
+  .testimonial-grid,
+  .volunteer-grid,
   .tips-grid,
   .journey-grid,
   .gallery-grid {
@@ -1445,5 +1724,9 @@ fieldset input {
   .site-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
   }
 }

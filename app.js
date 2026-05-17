@@ -10,6 +10,19 @@ const storageKeys = {
   gallery: "fdld:gallery",
 };
 
+const eventDetails = {
+  title: "FindADog at Lost Dog",
+  location: "Lost Dog Wash Trailhead, 12601 N. 124th St., Scottsdale, AZ 85259",
+  start: "20261010T150000Z",
+  end: "20261010T190000Z",
+  localStart: new Date("2026-10-10T08:00:00-07:00"),
+  description:
+    "Join FDLD for No Paw Left Behind, a dog charity walk and adoption event at Lost Dog Trail in Scottsdale.",
+};
+
+const adoptionGoal = 25;
+const baselineAdoptionConversations = 17;
+
 const bundledDogImages = {
   "assets/adoption-meet.png": adoptionMeetUrl,
   "adoption-meet.png": adoptionMeetUrl,
@@ -25,6 +38,8 @@ const defaultDogs = [
     age_months: 24,
     type: "medium",
     status: "available",
+    breed: "Australian cattle dog mix",
+    temperament_tags: ["easy leash", "people-curious", "patient home"],
     image_url: "assets/rescue-portrait.png",
     bio: "Easy on leash, people-curious, and happiest with a patient walking partner.",
     featured: true,
@@ -34,6 +49,8 @@ const defaultDogs = [
     age_months: 48,
     type: "large",
     status: "available",
+    breed: "Shepherd mix",
+    temperament_tags: ["calm", "loyal", "quiet mornings"],
     image_url: "assets/adoption-meet.png",
     bio: "Soft-eyed and steady, Maple is ready for quiet mornings and loyal routines.",
     featured: true,
@@ -43,6 +60,8 @@ const defaultDogs = [
     age_months: 12,
     type: "medium",
     status: "available",
+    breed: "Retriever mix",
+    temperament_tags: ["bouncy", "treat-motivated", "quick learner"],
     image_url: "assets/family-walk.png",
     bio: "Bright, bouncy, and treat-motivated, Rio is learning how good home can feel.",
     featured: true,
@@ -52,6 +71,8 @@ const defaultDogs = [
     age_months: 8,
     type: "small",
     status: "available",
+    breed: "Terrier mix",
+    temperament_tags: ["lap naps", "friendly", "short walks"],
     image_url: "assets/rescue-portrait.png",
     bio: "A compact little shadow who loves greetings, short walks, and lap naps.",
     featured: false,
@@ -61,6 +82,8 @@ const defaultDogs = [
     age_months: 84,
     type: "senior",
     status: "available",
+    breed: "Lab mix",
+    temperament_tags: ["mellow", "great manners", "slow strolls"],
     image_url: "assets/adoption-meet.png",
     bio: "A mellow senior with excellent manners and a soft spot for slow trail strolls.",
     featured: false,
@@ -70,6 +93,8 @@ const defaultDogs = [
     age_months: 36,
     type: "large",
     status: "adopted",
+    breed: "Husky mix",
+    temperament_tags: ["adopted", "trail buddy", "weekend hiker"],
     image_url: "assets/family-walk.png",
     bio: "Juniper found a family through an FDLD meet-and-greet and now hikes every weekend.",
     featured: false,
@@ -79,6 +104,8 @@ const defaultDogs = [
     age_months: 18,
     type: "small",
     status: "adopted",
+    breed: "Chihuahua mix",
+    temperament_tags: ["adopted", "bright", "small home"],
     image_url: "assets/rescue-portrait.png",
     bio: "Scout's adoption story is a reminder that the right walk can start a new life.",
     featured: false,
@@ -88,6 +115,8 @@ const defaultDogs = [
     age_months: 60,
     type: "large",
     status: "available",
+    breed: "Boxer mix",
+    temperament_tags: ["steady", "confident handler", "outdoorsy"],
     image_url: "assets/adoption-meet.png",
     bio: "Steady, loyal, and happiest beside confident handlers who love the outdoors.",
     featured: false,
@@ -115,6 +144,13 @@ const weatherTemp = document.querySelector("[data-weather-temp]");
 const weatherSummary = document.querySelector("[data-weather-summary]");
 const weatherWind = document.querySelector("[data-weather-wind]");
 const weatherTime = document.querySelector("[data-weather-time]");
+const menuToggle = document.querySelector(".menu-toggle");
+const navLinks = document.querySelector(".nav-links");
+const goalFill = document.querySelector("[data-goal-meter-fill]");
+const goalCount = document.querySelector("[data-goal-count]");
+const goalOpen = document.querySelector("[data-goal-open]");
+const goalDogs = document.querySelector("[data-goal-dogs]");
+const confirmationEndpoint = import.meta.env.VITE_RSVP_CONFIRMATION_ENDPOINT;
 
 const fields = {
   name: form.elements.name,
@@ -164,6 +200,15 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function escapeHtml(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function dogMeta(dog) {
   const months = Number(dog.age_months || dog.ageMonths || 0);
   if (months < 12) return `${months} months old | ${dog.type} dog`;
@@ -171,11 +216,39 @@ function dogMeta(dog) {
   return `${years} ${years === 1 ? "year" : "years"} old | ${dog.status}`;
 }
 
+function dogTags(dog) {
+  if (Array.isArray(dog.temperament_tags)) return dog.temperament_tags;
+  if (Array.isArray(dog.temperamentTags)) return dog.temperamentTags;
+  if (typeof dog.temperament_tags === "string") return dog.temperament_tags.split(",").map((tag) => tag.trim()).filter(Boolean);
+  return [];
+}
+
+function dogShareUrl(dog) {
+  const url = new URL(window.location.href);
+  url.hash = "adopt";
+  url.searchParams.set("dog", dog.name);
+  return url.toString();
+}
+
+function setCheckedByValue(inputs, value) {
+  const target = inputs.find((input) => input.value === value);
+  if (target) target.checked = true;
+}
+
 function getDogImage(dog) {
   const imageUrl = dog.image_url || dog.image || "assets/rescue-portrait.png";
   if (bundledDogImages[imageUrl]) return bundledDogImages[imageUrl];
   if (imageUrl.startsWith("http") || imageUrl.startsWith("data:") || imageUrl.startsWith("/")) return imageUrl;
   return bundledDogImages[imageUrl.split("/").pop()] || rescuePortraitUrl;
+}
+
+function enrichDog(dog) {
+  const sample = defaultDogs.find((defaultDog) => defaultDog.name === dog.name);
+  return {
+    ...dog,
+    breed: dog.breed || sample?.breed,
+    temperament_tags: dog.temperament_tags?.length ? dog.temperament_tags : sample?.temperament_tags || [],
+  };
 }
 
 function normalizeRsvp(row) {
@@ -186,6 +259,59 @@ function normalizeRsvp(row) {
     walkMode: row.walk_mode ?? row.walkMode,
     interests: row.interests || [],
   };
+}
+
+function buildCalendarLinks() {
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: eventDetails.title,
+    dates: `${eventDetails.start}/${eventDetails.end}`,
+    details: eventDetails.description,
+    location: eventDetails.location,
+  });
+  const googleUrl = `https://calendar.google.com/calendar/render?${params.toString()}`;
+  document.querySelectorAll("[data-calendar-google]").forEach((link) => {
+    link.href = googleUrl;
+  });
+
+  const icsLines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//FDLD//FindADog at Lost Dog//EN",
+    "BEGIN:VEVENT",
+    `UID:findadog-lostdog-20261010@fdld`,
+    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+    `DTSTART:${eventDetails.start}`,
+    `DTEND:${eventDetails.end}`,
+    `SUMMARY:${eventDetails.title}`,
+    `DESCRIPTION:${eventDetails.description}`,
+    `LOCATION:${eventDetails.location}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const icsUrl = URL.createObjectURL(new Blob([icsLines], { type: "text/calendar" }));
+  document.querySelectorAll("[data-calendar-ics]").forEach((link) => {
+    link.href = icsUrl;
+  });
+}
+
+function updateCountdown() {
+  const total = eventDetails.localStart.getTime() - Date.now();
+  const remaining = Math.max(0, total);
+  const days = Math.floor(remaining / 86400000);
+  const hours = Math.floor((remaining % 86400000) / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
+  const pairs = [
+    ["[data-countdown-days]", days],
+    ["[data-countdown-hours]", hours],
+    ["[data-countdown-minutes]", minutes],
+    ["[data-countdown-seconds]", seconds],
+  ];
+  pairs.forEach(([selector, value]) => {
+    const el = document.querySelector(selector);
+    if (el) el.textContent = String(value).padStart(2, "0");
+  });
 }
 
 async function loadDogs() {
@@ -206,7 +332,7 @@ async function loadDogs() {
     return;
   }
 
-  dogRecords = data?.length ? data : [...defaultDogs];
+  dogRecords = data?.length ? data.map(enrichDog) : [...defaultDogs];
 }
 
 async function loadGallery() {
@@ -271,19 +397,30 @@ function renderDogs(limitToFeatured = true) {
   dogDirectory.innerHTML = visibleDogs
     .map(
       (dog) => `
-        <article class="dog-card ${dog.status}">
-          <img src="${getDogImage(dog)}" alt="${dog.name}, ${dogMeta(dog)}" />
+        <article class="dog-card ${escapeHtml(dog.status)}" data-dog-name="${escapeHtml(dog.name)}">
+          <img src="${getDogImage(dog)}" alt="${escapeHtml(dog.name)}, ${escapeHtml(dogMeta(dog))}" />
           <div>
-            <p class="dog-meta">${dogMeta(dog)}</p>
-            <h3>${dog.name}</h3>
-            <span class="status-pill ${dog.status}">${dog.status}</span>
-            <p>${dog.bio || dog.description || ""}</p>
-            <a href="#rsvp">${dog.status === "available" ? "Ask about adoption" : "Read adoption story"}</a>
+            <p class="dog-meta">${escapeHtml(dogMeta(dog))}</p>
+            <h3>${escapeHtml(dog.name)}</h3>
+            <span class="status-pill ${escapeHtml(dog.status)}">${escapeHtml(dog.status)}</span>
+            <p class="dog-breed">${escapeHtml(dog.breed || "Breed mix pending")}</p>
+            <div class="dog-tags">${dogTags(dog).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+            <p>${escapeHtml(dog.bio || dog.description || "")}</p>
+            <div class="dog-actions">
+              <button class="link-button" type="button" data-meet-dog="${escapeHtml(dog.name)}">${dog.status === "available" ? "Request meetup" : "Ask about story"}</button>
+              <button class="link-button" type="button" data-share-dog="${escapeHtml(dog.name)}">Share this dog</button>
+            </div>
           </div>
         </article>
       `
     )
     .join("");
+
+  const requestedDog = new URLSearchParams(window.location.search).get("dog");
+  if (requestedDog) {
+    const card = [...dogDirectory.querySelectorAll("[data-dog-name]")].find((item) => item.dataset.dogName === requestedDog);
+    if (card) card.classList.add("is-requested");
+  }
 }
 
 function renderUploadedGallery() {
@@ -354,6 +491,87 @@ async function loadWeather() {
     weatherWind.textContent = "--";
     weatherTime.textContent = "--";
   }
+}
+
+async function loadPublicStats() {
+  let adoptionCount = baselineAdoptionConversations;
+  let totalRsvps = 0;
+
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabase.rpc("fdld_public_stats");
+    if (!error && data) {
+      const row = Array.isArray(data) ? data[0] : data;
+      adoptionCount = Math.max(baselineAdoptionConversations, Number(row.adoption_interests || 0));
+      totalRsvps = Number(row.total_rsvps || 0);
+    }
+  } else {
+    const localRsvps = readStore(storageKeys.rsvps).map(normalizeRsvp);
+    totalRsvps = localRsvps.length;
+    adoptionCount = Math.max(
+      baselineAdoptionConversations,
+      localRsvps.filter((rsvp) => rsvp.interests.includes("adopt")).length
+    );
+  }
+
+  const openSlots = Math.max(0, adoptionGoal - adoptionCount);
+  if (goalFill) goalFill.style.width = `${Math.min(100, Math.round((adoptionCount / adoptionGoal) * 100))}%`;
+  if (goalCount) goalCount.textContent = `${adoptionCount}/${adoptionGoal}`;
+  if (goalOpen) goalOpen.textContent = openSlots;
+  if (goalDogs) goalDogs.textContent = dogRecords.filter((dog) => dog.featured).length || 3;
+  document.querySelectorAll("[data-rsvp-count]").forEach((el) => {
+    el.textContent = totalRsvps;
+  });
+}
+
+async function sendOptionalRsvpConfirmation(payload) {
+  if (!confirmationEndpoint) return;
+
+  try {
+    await fetch(confirmationEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...payload,
+        event: eventDetails,
+      }),
+    });
+  } catch (error) {
+    console.warn("RSVP confirmation email hook failed.", error);
+  }
+}
+
+function requestDogMeetup(dogName) {
+  setCheckedByValue(fields.walkMode, "walking with an adoptable dog");
+  fields.interest.forEach((input) => {
+    if (input.value === "adopt" || input.value === "walk") input.checked = true;
+  });
+  form.elements.dogInterest.value = dogName;
+  const notePrefix = `I would like to meet ${dogName}.`;
+  if (!form.elements.note.value.includes(notePrefix)) {
+    form.elements.note.value = `${notePrefix}${form.elements.note.value ? ` ${form.elements.note.value}` : ""}`;
+  }
+  document.querySelector("#rsvp").scrollIntoView({ behavior: "smooth", block: "start" });
+  status.classList.add("is-success");
+  status.textContent = `${dogName} has been added to your RSVP note.`;
+}
+
+async function shareDog(dogName) {
+  const dog = dogRecords.find((record) => record.name === dogName);
+  if (!dog) return;
+  const shareData = {
+    title: `${dog.name} at FindADog at Lost Dog`,
+    text: `Meet ${dog.name}, ${dog.breed || dogMeta(dog)}, at FDLD's Lost Dog Trail adoption walk.`,
+    url: dogShareUrl(dog),
+  };
+
+  if (navigator.share) {
+    await navigator.share(shareData);
+    return;
+  }
+
+  await navigator.clipboard.writeText(shareData.url);
+  const button = [...document.querySelectorAll("[data-share-dog]")].find((item) => item.dataset.shareDog === dogName);
+  if (button) button.textContent = "Link copied";
 }
 
 function validateRsvp() {
@@ -549,10 +767,13 @@ form.addEventListener("submit", async (event) => {
 
   try {
     await insertOrStore("rsvps", storageKeys.rsvps, payload);
+    await sendOptionalRsvpConfirmation(payload);
     status.classList.add("is-success");
     status.textContent = `Thanks, ${payload.name}. Your RSVP for ${payload.party_size} is confirmed for ${interests.join(", ")}, with you ${walkMode}.`;
     form.reset();
     fields.party.value = "1";
+    form.elements.dogInterest.value = "";
+    await loadPublicStats();
     await renderAdmin();
   } catch (error) {
     status.textContent = `RSVP could not be saved: ${error.message}`;
@@ -696,15 +917,52 @@ document.querySelector("[data-show-all-dogs]").addEventListener("click", () => {
   renderDogs(false);
 });
 
+dogDirectory.addEventListener("click", async (event) => {
+  const meetupButton = event.target.closest("[data-meet-dog]");
+  const shareButton = event.target.closest("[data-share-dog]");
+  if (meetupButton) {
+    requestDogMeetup(meetupButton.dataset.meetDog);
+  }
+  if (shareButton) {
+    try {
+      await shareDog(shareButton.dataset.shareDog);
+    } catch (error) {
+      console.warn("Dog share failed.", error);
+    }
+  }
+});
+
+document.querySelector("[data-volunteer-cta]").addEventListener("click", () => {
+  fields.interest.forEach((input) => {
+    if (input.value === "volunteer") input.checked = true;
+  });
+});
+
+menuToggle.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("is-open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+navLinks.addEventListener("click", (event) => {
+  if (event.target.closest("a")) {
+    navLinks.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
 ["#dog-status-filter", "#dog-type-filter", "#dog-sort"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", () => renderDogs(false));
 });
 
 async function init() {
+  buildCalendarLinks();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
   await Promise.all([loadDogs(), loadGallery(), loadWeather()]);
   renderHeroDogs();
   renderDogs(true);
   renderUploadedGallery();
+  await loadPublicStats();
 
   if (isSupabaseConfigured) {
     const { data } = await supabase.auth.getSession();

@@ -7,8 +7,62 @@
       name="description"
       content="FindADog at Lost Dog is FDLD's dog charity walk and adoption event at Lost Dog Trail in Scottsdale, Arizona on October 10, 2026."
     />
+    <meta property="og:title" content="FindADog at Lost Dog | No Paw Left Behind" />
+    <meta
+      property="og:description"
+      content="Join FDLD on October 10, 2026 for a photo-rich dog charity walk and adoption day at Lost Dog Trail in Scottsdale, AZ."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://findadog-lostdog.pages.dev/" />
+    <meta property="og:image" content="https://findadog-lostdog.pages.dev/og-findadog.png" />
+    <meta property="og:image:alt" content="Families and volunteers walking rescue dogs on a Scottsdale desert trail" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FindADog at Lost Dog | No Paw Left Behind" />
+    <meta
+      name="twitter:description"
+      content="Walk, adopt, volunteer, sponsor, or give at FDLD's October 10, 2026 dog charity event in Scottsdale."
+    />
+    <meta name="twitter:image" content="https://findadog-lostdog.pages.dev/og-findadog.png" />
     <title>FindADog at Lost Dog | No Paw Left Behind</title>
     <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "FindADog at Lost Dog",
+        "description": "FDLD's dog charity walk and adoption event with trail walking, adoptable dogs, volunteer opportunities, sponsorships, and community support.",
+        "startDate": "2026-10-10T08:00:00-07:00",
+        "endDate": "2026-10-10T12:00:00-07:00",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "url": "https://findadog-lostdog.pages.dev/",
+        "image": ["https://findadog-lostdog.pages.dev/og-findadog.png"],
+        "location": {
+          "@type": "Place",
+          "name": "Lost Dog Wash Trailhead",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "12601 N. 124th St.",
+            "addressLocality": "Scottsdale",
+            "addressRegion": "AZ",
+            "postalCode": "85259",
+            "addressCountry": "US"
+          }
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "FDLD",
+          "url": "https://findadog-lostdog.pages.dev/"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": "https://findadog-lostdog.pages.dev/#rsvp"
+        }
+      }
+    </script>
   </head>
   <body>
     <header class="site-header" aria-label="Primary navigation">
@@ -16,14 +70,20 @@
         <span class="brand-mark" aria-hidden="true">FDLD</span>
         <span>FindADog at Lost Dog</span>
       </a>
-      <nav class="nav-links" aria-label="Page sections">
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="nav-links" id="primary-nav" aria-label="Page sections">
         <a href="#maps">Map</a>
+        <a href="#weather">Weather</a>
         <a href="#adopt">Adopt</a>
         <a href="#gallery">Gallery</a>
+        <a href="#volunteer">Volunteer</a>
         <a href="#teams">Teams</a>
         <a href="#sponsor">Sponsor</a>
         <a href="#rsvp">RSVP</a>
-        <a href="#admin">Admin</a>
       </nav>
     </header>
 
@@ -46,6 +106,20 @@
           <div class="hero-actions" aria-label="Primary actions">
             <a class="button primary" href="#rsvp">Walk the trail</a>
             <a class="button ghost" href="#adopt">Meet adoptable dogs</a>
+            <a class="button ghost" data-calendar-google target="_blank" rel="noreferrer">Add to Google Calendar</a>
+          </div>
+          <div class="countdown-card hero-countdown" aria-label="Countdown to event day">
+            <span>Event countdown</span>
+            <div class="countdown-grid" data-countdown>
+              <strong data-countdown-days>--</strong>
+              <strong data-countdown-hours>--</strong>
+              <strong data-countdown-minutes>--</strong>
+              <strong data-countdown-seconds>--</strong>
+              <small>Days</small>
+              <small>Hours</small>
+              <small>Mins</small>
+              <small>Secs</small>
+            </div>
           </div>
           <div class="hero-metrics" aria-label="Event goals">
             <span><strong>25</strong> adoption conversations</span>
@@ -58,6 +132,10 @@
           <p>October 10, 2026</p>
           <strong>Lost Dog Trail</strong>
           <span>Scottsdale, Arizona</span>
+          <div class="event-card-actions">
+            <a href="#rsvp">RSVP</a>
+            <a data-calendar-ics download="findadog-at-lost-dog.ics">Download calendar file</a>
+          </div>
         </aside>
       </section>
 
@@ -100,24 +178,41 @@
           </p>
         </div>
         <div class="impact-panel">
-          <div class="goal-meter" aria-label="17 of 25 adoption conversations pledged">
-            <div class="goal-meter-fill"></div>
+          <div class="goal-meter" aria-label="Adoption conversation goal progress">
+            <div class="goal-meter-fill" data-goal-meter-fill></div>
           </div>
           <div class="impact-stats">
             <article>
-              <strong>17/25</strong>
+              <strong data-goal-count>17/25</strong>
               <span>adoption conversations pledged</span>
             </article>
             <article>
-              <strong>8</strong>
+              <strong data-goal-open>8</strong>
               <span>meet-and-greet slots open</span>
             </article>
             <article>
-              <strong>3</strong>
+              <strong data-goal-dogs>3</strong>
               <span>featured dogs ready for profiles</span>
             </article>
           </div>
           <a class="button primary" href="#rsvp">Reserve an adoption meetup</a>
+        </div>
+        <div class="parking-card" aria-label="Parking and directions">
+          <article>
+            <span>Parking</span>
+            <strong>Lost Dog Wash Trailhead lot</strong>
+            <p>Use 12601 N. 124th St. as the public-facing trailhead address. Arrive early for closest spaces.</p>
+          </article>
+          <article>
+            <span>Drop-off</span>
+            <strong>Trailhead curb zone</strong>
+            <p>Use the trailhead entrance as the ride-share drop point, then follow volunteer signs to check-in.</p>
+          </article>
+          <article>
+            <span>Heat plan</span>
+            <strong>Shade and water stops</strong>
+            <p>Final route timing may shift if trail temperatures are unsafe for dogs.</p>
+          </article>
         </div>
       </section>
 
@@ -371,6 +466,27 @@
         <div class="dog-grid dog-directory" aria-live="polite"></div>
       </section>
 
+      <section class="testimonial-section" aria-labelledby="proof-title">
+        <div class="section-heading">
+          <p class="eyebrow dark">Community proof</p>
+          <h2 id="proof-title">The walk creates the first hello.</h2>
+        </div>
+        <div class="testimonial-grid">
+          <blockquote>
+            <p>"We came for a Saturday walk and left with the confidence to adopt. The volunteers made every question feel welcome."</p>
+            <cite>Past adopter placeholder</cite>
+          </blockquote>
+          <blockquote>
+            <p>"Sponsoring a water stop gave our team a real way to help, meet neighbors, and support dogs looking for home."</p>
+            <cite>Local sponsor placeholder</cite>
+          </blockquote>
+          <blockquote>
+            <p>"The trail format made adoption feel calm and human. You get to see each dog's personality outside a kennel."</p>
+            <cite>FDLD volunteer placeholder</cite>
+          </blockquote>
+        </div>
+      </section>
+
       <section class="gallery-section" id="gallery" aria-labelledby="gallery-title">
         <div class="section-heading">
           <p class="eyebrow dark">Gallery</p>
@@ -455,6 +571,35 @@
         </form>
       </section>
 
+      <section class="volunteer-section" id="volunteer" aria-labelledby="volunteer-title">
+        <div>
+          <p class="eyebrow dark">Volunteer crew</p>
+          <h2 id="volunteer-title">Be the reason the day runs calmly.</h2>
+          <p>
+            Volunteers help with check-in, water and shade stations, adoption host support,
+            photo moments, setup, teardown, and wayfinding along the route.
+          </p>
+        </div>
+        <div class="volunteer-grid">
+          <article>
+            <span>Before</span>
+            <h3>Setup and check-in</h3>
+            <p>Place signage, prepare RSVP lists, organize bowls, and welcome teams.</p>
+          </article>
+          <article>
+            <span>During</span>
+            <h3>Trail support</h3>
+            <p>Guide walkers, monitor water points, and help dogs take shade breaks.</p>
+          </article>
+          <article>
+            <span>After</span>
+            <h3>Adoption follow-up</h3>
+            <p>Help match interested families with volunteers for next-step conversations.</p>
+          </article>
+        </div>
+        <a class="button primary" href="#rsvp" data-volunteer-cta>Volunteer for event day</a>
+      </section>
+
       <section class="sponsor-section" id="sponsor" aria-labelledby="sponsor-title">
         <div class="sponsor-copy">
           <p class="eyebrow dark">Sponsor spots</p>
@@ -528,6 +673,35 @@
         </form>
       </section>
 
+      <section class="faq-section" id="faq" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <p class="eyebrow dark">Before you RSVP</p>
+          <h2 id="faq-title">Quick answers for trail day.</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Can I bring my own dog?</summary>
+            <p>Yes, if your dog is comfortable around people and other dogs, leashed at all times, and able to handle the weather safely.</p>
+          </details>
+          <details>
+            <summary>Is the event stroller-friendly?</summary>
+            <p>Some trail surfaces may be uneven. The final event route should favor the most accessible trailhead areas when possible.</p>
+          </details>
+          <details>
+            <summary>Where should I park?</summary>
+            <p>Use the Lost Dog Wash Trailhead lot at 12601 N. 124th St. and watch for event signage near check-in.</p>
+          </details>
+          <details>
+            <summary>What happens if it is too hot?</summary>
+            <p>FDLD can shorten the route, add shade breaks, shift meetup activity toward the trailhead, or adjust timing to protect dogs.</p>
+          </details>
+          <details>
+            <summary>Can I meet a specific dog?</summary>
+            <p>Use the Request meetup button on that dog's card. The RSVP note will include the dog's name for volunteer follow-up.</p>
+          </details>
+        </div>
+      </section>
+
       <section class="rsvp-section" id="rsvp" aria-labelledby="rsvp-title">
         <div class="rsvp-copy">
           <p class="eyebrow dark">RSVP</p>
@@ -537,9 +711,9 @@
             your RSVP on screen and can be connected to storage later.
           </p>
           <div class="donation-callout">
-            <span>Donation link placeholder</span>
+            <span>Donation link pending</span>
             <strong>Help cover care, transport, and adoption prep.</strong>
-            <a href="#" aria-label="Donation link placeholder">Donate when link is ready</a>
+            <a href="https://www.every.org/" target="_blank" rel="noreferrer" aria-label="Donation processor placeholder">Donation processor placeholder</a>
           </div>
         </div>
 
@@ -578,6 +752,7 @@
             <label for="note">Optional note</label>
             <textarea id="note" name="note" rows="4" placeholder="Tell us about your dog, your group, or how you want to help."></textarea>
           </div>
+          <input type="hidden" name="dogInterest" />
           <button class="button primary submit-button" type="submit">Confirm RSVP</button>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
@@ -678,8 +853,13 @@
       <div>
         <strong>FindADog at Lost Dog</strong>
         <p>FDLD | No Paw Left Behind | Lost Dog Trail, Scottsdale, AZ</p>
+        <p>Charity registration and tax information placeholder. Replace before public fundraising launch.</p>
       </div>
-      <a href="mailto:hello@example.org">Contact placeholder</a>
+      <div class="footer-links">
+        <a href="mailto:fdld@example.org">fdld@example.org</a>
+        <a href="#faq">FAQ</a>
+        <a href="#admin" rel="nofollow">Admin login</a>
+      </div>
     </footer>
 
     <script type="module" src="app.js"></script>
